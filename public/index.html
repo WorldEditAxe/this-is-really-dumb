@@ -39,7 +39,7 @@
   <script>
     ; (async () => {
       function fmtUrl(route, uri = "https") {
-        return `${uri}://${"instant-elisabeth-qworfgherough-588dc1f2.koyeb.app"}/${route.startsWith("/") ? route.substring(1) : route}`
+        return `${uri}://${window.location.host}/${route.startsWith("/") ? route.substring(1) : route}`
       }
 
       const man = new io.Manager(fmtUrl("", "wss"), { autoConnect: false })
