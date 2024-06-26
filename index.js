@@ -2,8 +2,10 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const pty = require('node-pty');
+const fs = require("fs")
 
-const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
+// const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
+const RESTART_INTERVAL = 60 * 1000
 
 setTimeout(() => process.exit(-1), RESTART_INTERVAL);
 
@@ -11,6 +13,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const startTime = Date.now();
+
+const termPage = fs.readFileSync("public/index.html")
 
 function formatTime(milliseconds) {
   let seconds = Math.floor(milliseconds / 1000);
@@ -28,10 +32,11 @@ app.get('/uptime', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+app.get('/', (req, res) => {
+  res.header("Content-Type", "text/html").writeHead(200).end(termPage)
+})
 
-// Serve static files from the /public directory
-app.use(express.static('public'));
+const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
