@@ -28,6 +28,9 @@ RUN rm nodesource_setup.sh \
 # Create and change to the app directory
 WORKDIR /usr/src/app
 
+RUN mkdir -p /home/terminal
+ENV HOME=/home/terminal
+
 # Copy application files
 COPY package*.json ./
 COPY index.js ./
@@ -39,9 +42,5 @@ RUN npm install
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Run the application as a non-root user
-USER nobody
-
 # Command to run the application
-# CMD ["node", "index.js"]
-CMD ["ls", "/home"]
+CMD ["node", "index.js"]
