@@ -28,10 +28,10 @@ RUN rm nodesource_setup.sh \
     && apt-get clean
 
 WORKDIR /home/nobody
-RUN cat upload.sh >> /home/nobody/.bashrc
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
+RUN cat upload.sh >> /home/nobody/.bashrc
 
 RUN mkdir -p /home/nobody
 ENV HOME=/home/nobody
