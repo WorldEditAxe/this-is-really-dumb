@@ -99,7 +99,8 @@
                 let dispose
                 const cb = key => {
                     if (key.charCodeAt(0) == 13) {
-                        terminal.writeln("[INFO] agreed to agreement; connecting...")
+                        terminal.writeln("[INFO] agreed; connecting...")
+                        terminal.writeln("[INFO] use upload <file> [time: Xw/Xm/Xy] to upload files to file.io from the terminal")
                         dispose()
                         res()
                     }
@@ -120,29 +121,6 @@
             terminal.onBell(() => {
                 // play bell chime
             })
-
-            // Handle mouse events
-            terminal.element.addEventListener('mousedown', (event) => {
-                handleMouseEvent(event, 'mousedown');
-            });
-
-            terminal.element.addEventListener('mouseup', (event) => {
-                handleMouseEvent(event, 'mouseup');
-            });
-
-            terminal.element.addEventListener('mousemove', (event) => {
-                handleMouseEvent(event, 'mousemove');
-            });
-
-            function handleMouseEvent(event, type) {
-                const { clientX, clientY } = event; // Get mouse coordinates relative to the viewport
-                const rect = terminal.element.getBoundingClientRect();
-                const x = clientX - rect.left; // Calculate mouse x position relative to terminal
-                const y = clientY - rect.top;  // Calculate mouse y position relative to terminal
-
-                // Emitting data via socket in the format expected by the backend
-                socket.emit('mouse', { x, y, type });
-            }
 
             socket.on("disconnect", () => {
                 terminal.writeln("\n[ERROR] connection lost; reconnecting...")
