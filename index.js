@@ -39,7 +39,6 @@ server.listen(PORT, () => {
 
 io.of('/term').on('connection', (socket) => {
   const shell = process.platform === 'win32' ? 'powershell.exe' : 'bash';
-  socket.emit("output", `creating CWD at ${process.env.HOME}`)
 
   const term = pty.spawn(shell, [], {
     name: 'xterm-color',

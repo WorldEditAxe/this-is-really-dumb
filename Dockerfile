@@ -28,8 +28,8 @@ RUN rm nodesource_setup.sh \
 # Create and change to the app directory
 WORKDIR /usr/src/app
 
-RUN mkdir -p /home/terminal
-ENV HOME=/home/terminal
+RUN mkdir -p /home/nobody
+ENV HOME=/home/nobody
 
 # Copy application files
 COPY package*.json ./
