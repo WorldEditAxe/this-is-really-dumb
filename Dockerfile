@@ -16,7 +16,7 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 
 # Run the Node.js setup script with sudo
-RUN sudo -E bash nodesource_setup.sh
+RUN bash nodesource_setup.sh
 
 # Install Node.js
 RUN apt-get install -y nodejs
@@ -37,14 +37,14 @@ COPY public ./public
 RUN npm install
 
 # Change ownership and permissions to prevent modification
-RUN chown -R nobody:nobody /usr/src/app \
+RUN chown -R ubuntu:ubuntu /usr/src/app \
     && chmod -R 555 /usr/src/app
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Run the application as a non-root user
-USER nobody
+USER ubuntu
 
 # Command to run the application
 CMD ["node", "index.js"]
