@@ -54,7 +54,7 @@ io.of('/term').on('connection', (socket) => {
     name: 'xterm-color',
     cols: 80,
     rows: 30,
-    cwd: process.env.HOME,
+    cwd: { HOME: process.env.HOME, PATH: process.env.PATH },
     env: process.env
   });
 
