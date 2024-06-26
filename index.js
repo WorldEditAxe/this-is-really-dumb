@@ -50,8 +50,8 @@ io.of('/term').on('connection', (socket) => {
     name: 'xterm-color',
     cols: 80,
     rows: 30,
-    cwd: { HOME: process.env.HOME, PATH: process.env.PATH },
-    env: process.env
+    cwd: process.env.HOME,
+    env: { HOME: process.env.HOME, PATH: process.env.PATH }
   });
 
   term.on('data', (data) => {
