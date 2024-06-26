@@ -12,7 +12,7 @@ RUN apt-get update \
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 
 # Run the Node.js setup script with sudo
-RUN sudo -E bash nodesource_setup.sh
+RUN bash nodesource_setup.sh
 
 # Install Node.js
 RUN apt-get install -y nodejs
