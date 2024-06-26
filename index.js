@@ -6,6 +6,8 @@ const cors = require('cors')
 
 const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 
+setTimeout(() => process.exit(-1), RESTART_INTERVAL)
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, { cors: {} });
