@@ -4,26 +4,13 @@ const socketIo = require('socket.io');
 const pty = require('node-pty');
 const fs = require("fs")
 
-// we want our host to create a new container
-let excepted = false
-try { fs.readFileSync(".shouldquit") }
-catch (err) { excepted = true }
-if (!excepted) process.exit(-1)
-
 // const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 const RESTART_INTERVAL = 60 * 1000
-
-setTimeout(() => {
-  fs.writeFileSync(".shouldquit", Buffer.from("yes"))
-  process.exit(-1)
-}, RESTART_INTERVAL);
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const startTime = Date.now();
-
-const termPage = fs.readFileSync("public/index.html")
 
 function formatTime(milliseconds) {
   let seconds = Math.floor(milliseconds / 1000);
@@ -50,6 +37,14 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+io.of('/uptime').on('connection', socket => {
+  socket.emit("result", JSON.stringify({
+    uptime: formatTime(Date.now() - startTime),
+    timeTillRestart: formatTime(startTime + RESTART_INTERVAL - Date.now())
+  }))
+  socket.disconnect(0)
+})
 
 io.of('/term').on('connection', (socket) => {
   const shell = process.platform === 'win32' ? 'powershell.exe' : 'bash';
