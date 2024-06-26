@@ -82,9 +82,8 @@
                         uptime = JSON.stringify(d)
                         resolved = true
                         sock.disconnect()
+                        res()
                     })
-                    resolved = true
-                    res()
                 })
 
                 resolved = true
