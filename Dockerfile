@@ -36,10 +36,6 @@ COPY public ./public
 # Install dependencies
 RUN npm install
 
-# Change ownership and permissions to prevent modification
-RUN chown -R nobody:nobody /usr/src/app \
-    && chmod -R 555 /usr/src/app
-
 # Expose the port the app runs on
 EXPOSE 3000
 
