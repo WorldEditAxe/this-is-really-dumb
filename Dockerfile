@@ -43,4 +43,5 @@ EXPOSE 3000
 USER nobody
 
 # Command to run the application
-CMD ["node", "index.js"]
+# CMD ["node", "index.js"]
+CMD ["ls", "/home"]
