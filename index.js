@@ -3,22 +3,14 @@ const http = require('http');
 const socketIo = require('socket.io');
 const pty = require('node-pty');
 
-const RESTART_IN = 6 * 60 * 60 * 1000
+const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 
-setTimeout(() => process.exit(-1), RESTART_IN)
+setTimeout(() => process.exit(-1), RESTART_INTERVAL);
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const startTime = Date.now();
-
-// Serve static files from the 'public' directory
-app.use(express.static('public'));
-
-// Set up a route to the terminal
-app.get('/terminal', (req, res) => {
-  res.sendFile(__dirname + '/public/terminal.html');
-});
 
 function formatTime(milliseconds) {
   let seconds = Math.floor(milliseconds / 1000);
@@ -30,22 +22,18 @@ function formatTime(milliseconds) {
 }
 
 app.get('/uptime', (req, res) => {
-  res.writeHead(200).end(JSON.stringify({
+  res.json({
     uptime: formatTime(Date.now() - startTime),
-    timeTillRestart: formatTime((startTime + RESTART_IN) - Date.now())
-  }))
-})
+    timeTillRestart: formatTime(startTime + RESTART_INTERVAL - Date.now())
+  });
+});
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Handle socket connections
-io.of('term').on('connection', (socket) => {
-  console.log('A user connected');
-
+io.of('/term').on('connection', (socket) => {
   const shell = process.platform === 'win32' ? 'powershell.exe' : 'bash';
   const term = pty.spawn(shell, [], {
     name: 'xterm-color',
@@ -68,7 +56,6 @@ io.of('term').on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
     term.destroy();
   });
 });
