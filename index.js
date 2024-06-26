@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const pty = require('node-pty');
-const cors = require('cors'); // Import CORS middleware
 
 const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 
@@ -31,14 +30,8 @@ app.get('/uptime', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-// Allow CORS for terminal.q13x.com
-const corsOptions = {
-  origin: 'https://terminal.q13x.com', // Adjust this based on your actual domain
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-};
-
-app.use(cors(corsOptions));
+// Serve static files from the /public directory
+app.use(express.static('public'));
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
