@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terminal</title>
+  <title>Open Terminal</title>
   <link rel="stylesheet" href="https://unpkg.com/xterm/css/xterm.css" />
   <style>
     body,
@@ -35,17 +35,23 @@
   <script src="https://unpkg.com/socket.io/client-dist/socket.io.js"></script>
   <script src="https://unpkg.com/xterm/lib/xterm.js"></script>
   <script src="https://unpkg.com/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+  <script src="https://unpkg.com/@xterm/addon-clipboard"></script>
   <script>
     ; (async () => {
       function fmtUrl(route, uri = "https") {
-        return `${uri}://${window.location.host}/${route.startsWith("/") ? route.substring(0, 1) : route}`
+        return `${uri}://${window.location.host}/${route.startsWith("/") ? route.substring(1) : route}`
       }
 
-      const man = new io.Manager(fmtUrl("", "wss"))
-      let socket = man.socket("/term", { autoConnect: false })
+      const man = new io.Manager(fmtUrl("", "wss"), { autoConnect: false })
+      let socket = man.socket("/term")
       const terminal = new Terminal();
+
       const fitAddon = new FitAddon.FitAddon();
       terminal.loadAddon(fitAddon);
+
+      const clipboardAddon = new ClipboardAddon.ClipboardAddon();
+      terminal.loadAddon(clipboardAddon)
+
       terminal.open(document.getElementById('terminal'));
 
       const resizeTerminal = () => {
@@ -64,12 +70,13 @@
         terminal.writeln("with an Internet connection. To restore to a clean state and prevent malicious")
         terminal.writeln("use, this Linux instance resets every 6 hours.")
 
-        const uptime = await fetch(fmtUrl("/uptime"))
-        terminal.writeln(`[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
+        const uptime = await (await fetch(fmtUrl("/uptime"))).json()
+        terminal.writeln(`\n[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
 
-        terminal.writeln("")
+        terminal.writeln("-----")
         terminal.writeln("By hitting ENTER and connecting to the server, you have read the above and agree")
         terminal.writeln("not to abuse any functionality, and to use the server in a lawful manner.")
+        terminal.writeln("Misuse/abuse and participation in illegal activity is prohibited.")
         terminal.writeln("-----")
 
         let dispose
@@ -92,6 +99,10 @@
       terminal.onData(data => {
         socket.emit('input', data);
       });
+
+      terminal.onBell(() => {
+        // play bell chime
+      })
 
       socket.on("disconnect", () => {
         terminal.writeln("\n[ERROR] connection lost; reconnecting...")
