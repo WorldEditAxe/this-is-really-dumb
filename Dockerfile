@@ -1,12 +1,25 @@
 # Use Ubuntu 20.04 LTS as base image
 FROM ubuntu:20.04
 
+# Prevent tzdata from prompting during build
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install necessary packages
+# Update package lists and install necessary tools
 RUN apt-get update \
-    && apt-get install -y nodejs npm \
-    && npm install -g npm
+    && apt-get install -y curl
+
+# Download Node.js setup script from NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+
+# Run the Node.js setup script with sudo
+RUN sudo -E bash nodesource_setup.sh
+
+# Install Node.js
+RUN apt-get install -y nodejs
+
+# Clean up
+RUN rm nodesource_setup.sh \
+    && apt-get clean
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
@@ -30,4 +43,4 @@ EXPOSE 3000
 USER nobody
 
 # Command to run the application
-CMD [ "node", "index.js" ]
+CMD ["node", "index.js"]
