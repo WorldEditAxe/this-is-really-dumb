@@ -80,7 +80,7 @@
                 sock.connect()
                 await new Promise(res => {
                     sock.on('result', d => {
-                        uptime = JSON.stringify(d)
+                        uptime = JSON.parse(d)
                         resolved = true
                         sock.disconnect()
                         res()
