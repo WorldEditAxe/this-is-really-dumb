@@ -37,14 +37,14 @@ COPY public ./public
 RUN npm install
 
 # Change ownership and permissions to prevent modification
-RUN chown -R ubuntu:ubuntu /usr/src/app \
+RUN chown -R nobody:nobody /usr/src/app \
     && chmod -R 555 /usr/src/app
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Run the application as a non-root user
-USER ubuntu
+USER nobody
 
 # Command to run the application
 CMD ["node", "index.js"]
