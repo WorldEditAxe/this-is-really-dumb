@@ -1,5 +1,10 @@
-# Use the official Node.js image
-FROM node:16
+# Use Ubuntu 20.04 LTS as base image
+FROM ubuntu:20.04
+
+# Update and install necessary packages
+RUN apt-get update \
+    && apt-get install -y nodejs npm \
+    && npm install -g npm
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
@@ -13,8 +18,8 @@ COPY public ./public
 RUN npm install
 
 # Change ownership and permissions to prevent modification
-RUN chown -R root:root /usr/src/app && \
-    chmod -R 555 /usr/src/app
+RUN chown -R nobody:nobody /usr/src/app \
+    && chmod -R 555 /usr/src/app
 
 # Expose the port the app runs on
 EXPOSE 3000
