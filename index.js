@@ -4,8 +4,7 @@ const socketIo = require('socket.io');
 const pty = require('node-pty');
 const cors = require('cors')
 
-// const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
-const RESTART_INTERVAL = 60 * 1000
+const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 
 const app = express();
 const server = http.createServer(app);
