@@ -13,7 +13,10 @@ if (!excepted) process.exit(-1)
 // const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 const RESTART_INTERVAL = 60 * 1000
 
-setTimeout(() => process.exit(-1), RESTART_INTERVAL);
+setTimeout(() => {
+  fs.writeFileSync(".shouldquit", Buffer.from("yes"))
+  process.exit(-1)
+}, RESTART_INTERVAL);
 
 const app = express();
 const server = http.createServer(app);
