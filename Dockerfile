@@ -8,12 +8,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y \
         curl \
-        build-essential \   # Essential build tools like gcc, g++, make
-        python \            # Required for node-gyp (if building Node.js addons)
-        libcairo2-dev \     # Example: Development headers for a specific library
-        libjpeg-dev \       # Example: Development headers for a specific library
-        libgif-dev \        # Example: Development headers for a specific library
-        # Add more development libraries as needed for your native tools
+        build-essential \
+        python \
+        libcairo2-dev \
+        libjpeg-dev \
+        libgif-dev \
     && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 
 # Run the Node.js setup script with sudo
