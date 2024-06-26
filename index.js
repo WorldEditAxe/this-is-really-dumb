@@ -29,10 +29,6 @@ app.get('/uptime', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => {
-  res.header("Content-Type", "text/html").writeHead(200).end(termPage)
-})
-
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
