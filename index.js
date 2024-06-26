@@ -4,6 +4,12 @@ const socketIo = require('socket.io');
 const pty = require('node-pty');
 const fs = require("fs")
 
+// we want our host to create a new container
+let excepted = false
+try { fs.readFileSync(".shouldquit") }
+catch (err) { excepted = true }
+if (!excepted) process.exit(-1)
+
 // const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 const RESTART_INTERVAL = 60 * 1000
 
