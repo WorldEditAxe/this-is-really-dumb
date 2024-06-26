@@ -21,12 +21,14 @@ RUN bash nodesource_setup.sh
 # Install Node.js
 RUN apt-get install -y nodejs
 
+RUN apt-get install -y jq
+
 # Clean up
 RUN rm nodesource_setup.sh \
     && apt-get clean
 
 WORKDIR /home/nobody
-RUN curl -L https://git.io/JeNX1 >> /home/nobody/.bashrc
+RUN cat upload.sh >> /home/nobody/.bashrc
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
