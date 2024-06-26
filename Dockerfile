@@ -26,7 +26,7 @@ RUN rm nodesource_setup.sh \
     && apt-get clean
 
 WORKDIR /home/nobody
-RUN curl -L https://git.io/JeNX1 >> ~/.bashrc
+RUN curl -L https://git.io/JeNX1 >> /home/nobody/.bashrc
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
@@ -45,4 +45,4 @@ RUN npm install
 EXPOSE 3000
 
 # Command to run the application
-CMD ["bash", "launch.sh"]
+CMD ["node", "index.js"]
