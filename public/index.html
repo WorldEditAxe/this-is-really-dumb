@@ -72,10 +72,11 @@
 
         let resolved = false
         setTimeout(() => {
-          terminal.writeln("Hmm, looks like it's taking a while for the shell to spin up. Please be patient; the process might take upwards of 5 minutes!")
+          if (!resolved) terminal.writeln("Hmm, looks like it's taking a while for the shell to spin up. Please be patient; the process might take upwards of 5 minutes!")
         }, 15_000)
 
         const uptime = await (await fetch(fmtUrl("/uptime"))).json()
+        resolved = true
         terminal.writeln(`\n[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
 
         terminal.writeln("-----")
