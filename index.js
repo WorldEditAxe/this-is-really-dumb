@@ -2,15 +2,17 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const pty = require('node-pty');
-const fs = require("fs")
+const cors = require('cors')
 
 // const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 const RESTART_INTERVAL = 60 * 1000
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, { cors: {} });
 const startTime = Date.now();
+
+app.use(cors())
 
 function formatTime(milliseconds) {
   let seconds = Math.floor(milliseconds / 1000);
