@@ -31,6 +31,7 @@ WORKDIR /home/nobody
 
 # Create and change to the app directory
 WORKDIR /usr/src/app
+COPY upload.sh .
 RUN cat upload.sh >> /home/nobody/.bashrc
 
 RUN mkdir -p /home/nobody
