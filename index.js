@@ -58,35 +58,42 @@ io.of('/term').on('connection', async (socket) => {
       });
     });
 
-    // Read the contents of upload.sh
     const uploadShContent = await fs.readFile(path.join(__dirname, 'upload.sh'), 'utf8');
-    
-    // Append the contents of upload.sh to the user's .bashrc
     await fs.appendFile(`${userHome}/.bashrc`, `\n\n# Contents of upload.sh\n${uploadShContent}`);
 
-    const shell = 'bash';
-    const term = pty.spawn('su', ['-', username, '-c', shell], {
-      name: 'xterm-color',
-      cols: 80,
-      rows: 30,
-      cwd: userHome,
-      env: { ...process.env, HOME: userHome }
-    });
+    const startShell = () => {
+      const shell = 'bash';
+      const term = pty.spawn('su', ['-', username, '-c', `script -qc "${shell}" /dev/null`], {
+        name: 'xterm-color',
+        cols: 80,
+        rows: 30,
+        cwd: userHome,
+        env: { ...process.env, HOME: userHome, TERM: 'xterm-color' }
+      });
 
-    term.on('data', (data) => {
-      socket.emit('output', data);
-    });
+      term.on('data', (data) => {
+        socket.emit('output', data);
+      });
 
-    socket.on('input', (data) => {
-      term.write(data);
-    });
+      term.on('exit', () => {
+        startShell(); // Restart the shell when it exits
+      });
 
-    socket.on('resize', (size) => {
-      term.resize(size.cols, size.rows);
-    });
+      socket.on('input', (data) => {
+        term.write(data);
+      });
+
+      socket.on('resize', (size) => {
+        term.resize(size.cols, size.rows);
+      });
+
+      return term;
+    };
+
+    let currentTerm = startShell();
 
     socket.on('disconnect', () => {
-      term.destroy();
+      currentTerm.kill();
       exec(`userdel -r ${username}`, (error) => {
         if (error) {
           console.error(`Error deleting user: ${error}`);
