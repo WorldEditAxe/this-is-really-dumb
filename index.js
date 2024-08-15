@@ -68,19 +68,22 @@ io.of('/term').on('connection', async (socket) => {
 
     const startShell = () => {
       const shell = 'bash';
-      const term = pty.spawn('su', ['-', username, '-c', `
-        ulimit -v ${MAX_RAM_PER_USER} && 
-        ulimit -f ${MAX_STORAGE_PER_USER} && 
-        ulimit -u ${MAX_PROCESSES_PER_USER} && 
-        script -qc "${shell}" /dev/null
-      `], {
+      exec(`ulimit -v ${MAX_RAM_PER_USER} && ulimit -f ${MAX_STORAGE_PER_USER} && ulimit -n ${MAX_PROCESSES_PER_USER}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error setting ulimit: ${error}`);
+          return;
+        }
+      });
+
+      // Spawn the terminal as the specified user
+      const term = pty.spawn('su', ['-', username, '-c', `script -qc "${shell}" /dev/null`], {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
         cwd: userHome,
         env: { ...process.env, HOME: userHome, TERM: 'xterm-color' }
       });
-
+      
       term.on('data', (data) => {
         socket.emit('output', data);
       });
