@@ -19,7 +19,7 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     build-essential curl wget vim tmux \
     unzip rsync net-tools iputils-ping nano \
-    git python3 python3-pip default-jdk cmake \
+    git python3 python3-pip default-jdk openjdk-8-jdk-headless openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-21-jdk-headless cmake \
     gdb locate man-db bash-completion apt-transport-https \
     ca-certificates software-properties-common util-linux gzip \
     traceroute dnsutils tcpdump nmap htop \
@@ -43,8 +43,6 @@ RUN echo "* hard nproc 100" >> /etc/security/limits.conf && \
     echo "* soft nproc 50" >> /etc/security/limits.conf && \
     echo "* hard nofile 1024" >> /etc/security/limits.conf && \
     echo "* soft nofile 512" >> /etc/security/limits.conf && \
-    echo "* hard as 512000" >> /etc/security/limits.conf && \
-    echo "* soft as 256000" >> /etc/security/limits.conf && \
     echo "root hard nproc unlimited" >> /etc/security/limits.conf
 
 # Clean up
