@@ -40,17 +40,18 @@ upload() {
 }
 
 sharecmd() {
-    if [ $# -eq 1 ]; then
+    if [ $# -gt 0 ]; then
+        cmd="$*"
         encoded_cmd=""
-        for ((i=0;i<${#1};i++)); do
-            if [[ ${1:$i:1} =~ ^[a-zA-Z0-9\.\~\_\-]$ ]]; then
-                encoded_cmd+="${1:$i:1}"
+        for ((i=0;i<${#cmd};i++)); do
+            if [[ ${cmd:$i:1} =~ ^[a-zA-Z0-9\.\~\_\-]$ ]]; then
+                encoded_cmd+="${cmd:$i:1}"
             else
-                encoded_cmd+=$(printf '%%%02X' "'${1:$i:1}")
+                encoded_cmd+=$(printf '%%%02X' "'${cmd:$i:1}")
             fi
         done
         echo "Add this to the end of the website's URL: ?cmd=$encoded_cmd"
     else
-        echo "Usage: sharecmd <command>"
+        echo "Usage: sharecmd <command> (try to put your command in quotes if it doesn't work correctly)"
     fi
 }
