@@ -55,3 +55,5 @@ sharecmd() {
         echo "Usage: sharecmd <command> (try to put your command in quotes if it doesn't work correctly)"
     fi
 }
+
+echo "Hello and welcome! To get started, please read README.txt (less README.txt OR cat README.txt) for more information :D"
