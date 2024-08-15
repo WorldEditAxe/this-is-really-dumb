@@ -4,7 +4,7 @@ const socketIo = require('socket.io');
 const pty = require('node-pty');
 const cors = require('cors');
 const { exec } = require('child_process');
-const crypto = require('crypto')
+const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -60,12 +60,12 @@ io.of('/term').on('connection', async (socket) => {
 
     // Read the contents of upload.sh
     const uploadShContent = await fs.readFile(path.join(__dirname, 'upload.sh'), 'utf8');
-
+    
     // Append the contents of upload.sh to the user's .bashrc
     await fs.appendFile(`${userHome}/.bashrc`, `\n\n# Contents of upload.sh\n${uploadShContent}`);
 
     const shell = 'bash';
-    const term = pty.spawn(shell, [], {
+    const term = pty.spawn('su', ['-', username, '-c', shell], {
       name: 'xterm-color',
       cols: 80,
       rows: 30,
@@ -93,7 +93,6 @@ io.of('/term').on('connection', async (socket) => {
         }
       });
     });
-
   } catch (error) {
     console.error(`Error setting up user: ${error}`);
     socket.disconnect();
