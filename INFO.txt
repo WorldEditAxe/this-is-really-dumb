@@ -18,6 +18,7 @@ not automatically expand to fill the whole screen. Thank you!
 ==========================================
 SWITCHING BETWEEN TOOL VERSIONS
 ==========================================
+Run `installtools` in the terminal prior to running these commands, or they won't work.
 * Node.js: Run `nvm` in the terminal to change Node.js versions.
 * Java: Run `jenv` in the terminal to change Java versions.
 * Python 3: Run `pyenv` in  the terminal to change Python versions.
