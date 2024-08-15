@@ -64,6 +64,8 @@
             resizeTerminal();
             window.addEventListener('resize', resizeTerminal);
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const cmd = urlParams.get('cmd');
 
             await new Promise(async res => {
                 terminal.writeln("-----")
@@ -109,6 +111,10 @@
             })
 
             socket.connect();
+
+            if (cmd) {
+                socket.emit('input', cmd + '\n');
+            }
 
             socket.on('output', (data) => {
                 terminal.write(data);
