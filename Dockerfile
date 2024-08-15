@@ -1,5 +1,5 @@
-# Use Ubuntu 20.04 LTS as base image
-FROM ubuntu:20.04
+# Use Ubuntu 24.04 LTS as base image
+FROM ubuntu:24.04
 
 # Prevent tzdata from prompting during build
 ENV DEBIAN_FRONTEND=noninteractive
@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iotop sysstat dstat lsof psmisc \
     parted e2fsprogs btrfs-progs xfsprogs \
     sed gawk grep diffutils bzip2 \
-    xz-utils busybox netcat \
+    xz-utils busybox netcat less \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -54,6 +54,7 @@ ENV HOME=/home/nobody
 # Copy application files
 COPY package*.json ./
 COPY index.js ./
+COPY README.txt ./
 
 # Install dependencies
 RUN npm install
