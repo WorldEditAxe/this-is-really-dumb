@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iotop sysstat dstat lsof psmisc \
     parted e2fsprogs btrfs-progs xfsprogs \
     sed gawk grep diffutils bzip2 \
-    xz-utils busybox netcat less \
+    xz-utils busybox netcat-traditional less \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
