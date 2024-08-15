@@ -15,7 +15,8 @@ RUN apt-get update \
         libgif-dev \
     && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     build-essential curl wget vim tmux \
     unzip rsync net-tools iputils-ping nano \
     git python3 python3-pip default-jdk cmake \
@@ -26,9 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     parted e2fsprogs btrfs-progs xfsprogs \
     sed gawk grep diffutils bzip2 \
     xz-utils busybox netcat-traditional less \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
+    || true && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+    
 # Run the Node.js setup script with sudo
 RUN bash nodesource_setup.sh
 
