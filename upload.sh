@@ -56,4 +56,4 @@ sharecmd() {
     fi
 }
 
-echo "Hello and welcome! To get started, please read README.txt (less README.txt OR cat README.txt) for more information :D"
+echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
