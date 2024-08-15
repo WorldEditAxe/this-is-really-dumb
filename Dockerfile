@@ -14,7 +14,7 @@ RUN apt-get update \
         libjpeg-dev \
         libgif-dev \
     && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
-
+    
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     build-essential curl wget vim tmux \
@@ -22,14 +22,13 @@ RUN apt-get update && \
     git python3 python3-pip default-jdk cmake \
     gdb locate man-db bash-completion apt-transport-https \
     ca-certificates software-properties-common util-linux gzip \
-    traceroute dnsutils tcpdump nmap htop \
-    iotop sysstat dstat lsof psmisc \
+    traceroute dnsutils tcpdump nmap \
+    lsof psmisc \
     parted e2fsprogs btrfs-progs xfsprogs \
     sed gawk grep diffutils bzip2 \
     xz-utils busybox netcat-traditional less \
-    || true && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    pcp- pcp-conf- libpfm4- libpcp3t64- libpcp-archive1t64- \
+    && apt-get clean \
 
 RUN apt-cache rdepends pcp
     
