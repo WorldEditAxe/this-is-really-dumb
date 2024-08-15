@@ -106,6 +106,7 @@ io.of('/term').on('connection', async (socket) => {
       socket.on('resize', (size) => {
         console.log("Resizing!")
         term.resize(size.cols, size.rows);
+        process.kill(term.pid, 'SIGWINCH');
       });
 
       return term;
