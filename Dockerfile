@@ -39,6 +39,14 @@ RUN apt-get install -y nodejs
 
 RUN apt-get install -y jq
 
+RUN echo "* hard nproc 100" >> /etc/security/limits.conf && \
+    echo "* soft nproc 50" >> /etc/security/limits.conf && \
+    echo "* hard nofile 1024" >> /etc/security/limits.conf && \
+    echo "* soft nofile 512" >> /etc/security/limits.conf && \
+    echo "* hard as 512000" >> /etc/security/limits.conf && \
+    echo "* soft as 256000" >> /etc/security/limits.conf && \
+    echo "root hard nproc unlimited" >> /etc/security/limits.conf
+
 # Clean up
 RUN rm nodesource_setup.sh \
     && apt-get clean
