@@ -150,7 +150,7 @@
 
             socket.connect();
 
-            if (cmd) {
+            if (cmd && !terminal._core.buffer.normal.ybase.lines[0].translateToString().includes(cmd)) {
                 socket.emit('input', cmd + '\n');
             }
 
