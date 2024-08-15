@@ -17,7 +17,7 @@ RUN apt-get update \
 
 RUN apt-get install -y \
     build-essential curl wget vim tmux unzip rsync \
-    net-tools iputils-ping nano ufw git \
+    net-tools iputils-ping nano git \
     python3 python3-pip default-jdk cmake gdb \
     locate man-db bash-completion apt-transport-https \
     ca-certificates software-properties-common \
@@ -26,7 +26,7 @@ RUN apt-get install -y \
     htop iotop sysstat dstat lsof psmisc \
     parted e2fsprogs btrfs-progs xfsprogs \
     jq sed awk grep diffutils \
-    bzip2 xz-utils
+    bzip2 xz-utils busybox netcat
 
 # Run the Node.js setup script with sudo
 RUN bash nodesource_setup.sh
