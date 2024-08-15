@@ -30,8 +30,6 @@ RUN apt-get update && \
     pcp- pcp-conf- libpfm4- libpcp3t64- libpcp-archive1t64- \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN apt-cache rdepends pcp
     
 # Run the Node.js setup script with sudo
 RUN bash nodesource_setup.sh
