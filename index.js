@@ -5,6 +5,8 @@ const pty = require('node-pty');
 const cors = require('cors');
 const { exec } = require('child_process');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs').promises;
+const path = require('path');
 
 const RESTART_INTERVAL = 6 * 60 * 60 * 1000;
 setTimeout(() => process.exit(-1), RESTART_INTERVAL);
@@ -44,23 +46,31 @@ io.of('/uptime').on('connection', socket => {
   socket.disconnect(0);
 });
 
-io.of('/term').on('connection', (socket) => {
+io.of('/term').on('connection', async (socket) => {
   const username = `user_${uuidv4().split('-')[0]}`;
+  const userHome = `/home/${username}`;
   
-  exec(`useradd -m ${username}`, (error) => {
-    if (error) {
-      console.error(`Error creating user: ${error}`);
-      socket.disconnect();
-      return;
-    }
+  try {
+    await new Promise((resolve, reject) => {
+      exec(`useradd -m ${username}`, (error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+    });
+
+    // Read the contents of upload.sh
+    const uploadShContent = await fs.readFile(path.join(__dirname, 'upload.sh'), 'utf8');
+
+    // Append the contents of upload.sh to the user's .bashrc
+    await fs.appendFile(`${userHome}/.bashrc`, `\n\n# Contents of upload.sh\n${uploadShContent}`);
 
     const shell = 'bash';
     const term = pty.spawn(shell, [], {
       name: 'xterm-color',
       cols: 80,
       rows: 30,
-      cwd: `/home/${username}`,
-      env: { HOME: `/home/${username}`, PATH: process.env.PATH }
+      cwd: userHome,
+      env: { ...process.env, HOME: userHome }
     });
 
     term.on('data', (data) => {
@@ -83,5 +93,9 @@ io.of('/term').on('connection', (socket) => {
         }
       });
     });
-  });
+
+  } catch (error) {
+    console.error(`Error setting up user: ${error}`);
+    socket.disconnect();
+  }
 });
