@@ -93,6 +93,32 @@ installtools() {
   jenv enable-plugin export
   eval "$(jenv init -)"
 
+  echo "Adding Java installations to jenv, please wait... (this may take a short while)"
+  # Automatically discover and add Java installations to jenv
+    {
+      # List of common Java installation paths
+      paths=(
+        "/usr/lib/jvm"
+        "/usr/java"
+        "$HOME/.sdkman/candidates/java"
+      )
+    
+      # Iterate over each path and add Java installations
+      for path in "${paths[@]}"; do
+        if [ -d "$path" ]; then
+          for java_dir in "$path"/*; do
+            if [ -d "$java_dir" ]; then
+              # Avoid adding the same version multiple times
+              if ! jenv versions | grep -q "$(basename "$java_dir")"; then
+                jenv add "$java_dir" >/dev/null 2>&1
+              fi
+            fi
+          done
+        fi
+      done
+    } &> /dev/null
+
+
   echo "Installation complete. Please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
 }
 
