@@ -119,9 +119,30 @@
                     }
                     dispose = terminal.onData(cb).dispose
                 })
-            } else {
+            } else {         
                 terminal.writeln("-----")
                 terminal.writeln("Welcome back!")
+                terminal.writeln("")
+
+                let resolved = false, uptime = null
+                setTimeout(() => {
+                    if (!resolved) terminal.writeln("Hmm, looks like it's taking a while for the shell to spin up. Please be patient; the process might take upwards of 5 minutes!")
+                }, 15_000)
+
+                const sock = man.socket("/uptime")
+                sock.connect()
+                await new Promise(res => {
+                    sock.on('result', d => {
+                        uptime = JSON.parse(d)
+                        resolved = true
+                        sock.disconnect()
+                        res()
+                    })
+                })
+
+                resolved = true
+                
+                terminal.writeln(`[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
                 terminal.writeln("-----")
                 terminal.writeln("[INFO] use upload <file> [time: Xw/Xm/Xy] to upload files to file.io from the terminal")
                 terminal.writeln("[INFO] run sharecmd <cmd> to share commands with others")
