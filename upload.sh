@@ -58,33 +58,31 @@ sharecmd() {
     fi
 }
 
-# Check if the build tools have already been installed
-if [ -f ~/.build_tools_installed ]; then
-  # Build tools already installed, do nothing
-  :
-else
-  # Check if the user wants to install build tools
-  if [ -f ~/.build_tools_choice ]; then
-    read choice < ~/.build_tools_choice
-  else
-    echo "Do you want to install build tools? (yes/no)"
-    read choice
-    echo "$choice" > ~/.build_tools_choice
+# Function to install build tools
+installtools() {
+  # Check if the build tools have already been installed
+  if [ -f ~/.build_tools_installed ]; then
+    echo "Build tools are already installed."
+    return
   fi
 
-  if [ "$choice" = "yes" ]; then
-    # Install build tools
-    echo 'Installing some build tools (this may take a short while)...'
-    curl https://pyenv.run | bash
-    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-    git clone https://github.com/jenv/jenv.git ~/.jenv
+  # Install build tools
+  echo 'Installing build tools (this may take a short while)...'
+  
+  # Install pyenv
+  curl https://pyenv.run | bash
+  
+  # Install nvm
+  wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+  
+  # Install jenv
+  git clone https://github.com/jenv/jenv.git ~/.jenv
+  
+  # Create a file to indicate that the script has been run
+  touch ~/.build_tools_installed
 
-    echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
-
-    # Create a file to indicate that the script has been run
-    touch ~/.build_tools_installed
-  fi
-fi
+  echo "Installation complete. Please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
+}
 
 # Initialize environment variables only if build tools are installed
 if [ -f ~/.build_tools_installed ]; then
