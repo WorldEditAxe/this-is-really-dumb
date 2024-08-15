@@ -4,12 +4,12 @@ FROM ubuntu:24.04
 # Prevent tzdata from prompting during build
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update package lists and install necessary tools
 RUN apt-get update \
     && apt-get install -y \
         curl \
         build-essential \
-        python \
+        python-is-python3 \
+        python3 \
         libcairo2-dev \
         libjpeg-dev \
         libgif-dev \
