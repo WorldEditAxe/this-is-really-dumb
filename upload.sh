@@ -83,8 +83,6 @@ else
 
     # Create a file to indicate that the script has been run
     touch ~/.build_tools_installed
-  else
-    echo "Build tools installation skipped."
   fi
 fi
 
