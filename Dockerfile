@@ -22,13 +22,14 @@ RUN apt-get update && \
     git python3 python3-pip default-jdk cmake \
     gdb locate man-db bash-completion apt-transport-https \
     ca-certificates software-properties-common util-linux gzip \
-    traceroute dnsutils tcpdump nmap \
+    traceroute dnsutils tcpdump nmap htop \
     lsof psmisc \
     parted e2fsprogs btrfs-progs xfsprogs \
     sed gawk grep diffutils bzip2 \
     xz-utils busybox netcat-traditional less \
     pcp- pcp-conf- libpfm4- libpcp3t64- libpcp-archive1t64- \
     && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN apt-cache rdepends pcp
     
