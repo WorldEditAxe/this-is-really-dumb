@@ -81,6 +81,18 @@ installtools() {
   # Create a file to indicate that the script has been run
   touch ~/.build_tools_installed
 
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+  export PATH="$HOME/.jenv/bin:$PATH"
+  eval "$(jenv init -)"
+  jenv enable-plugin export
+  eval "$(jenv init -)"
+
   echo "Installation complete. Please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
 }
 
