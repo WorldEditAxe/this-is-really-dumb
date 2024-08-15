@@ -1,3 +1,5 @@
+#!/bin/bash
+
 upload() {
     if [ $# = 1 -o $# = 2 ]; then
         if [ -f "$1" ]; then
@@ -56,4 +58,33 @@ sharecmd() {
     fi
 }
 
-echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
+# Check if the script has already been run
+if [ -f ~/.build_tools_installed ]; then
+  # Build tools already installed, do nothing
+  :
+else
+  # Set the script to run in the background and prevent Ctrl+C from interrupting
+  trap '' INT
+
+  # Run the script
+  nohup bash -c "echo 'Installing some build tools (this may take a while)...'; curl https://pyenv.run | bash; wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash; git clone https://github.com/jenv/jenv.git ~/.jenv" > /dev/null 2>&1 &
+
+  # Wait for the script to finish
+  wait $!
+
+  echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
+
+  # Create a file to indicate that the script has been run
+  touch ~/.build_tools_installed
+fi
+
+# To be ran upon startup
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
+echo 'eval "$(jenv init -)"' >> ~/.bash_profile
