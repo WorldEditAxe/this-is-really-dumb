@@ -43,6 +43,14 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+io.of('/uptime').on('connection', socket => {
+  socket.emit("result", JSON.stringify({
+    uptime: formatTime(Date.now() - startTime),
+    timeTillRestart: formatTime(startTime + RESTART_INTERVAL - Date.now())
+  }));
+  socket.disconnect(0);
+});
+
 io.of('/term').on('connection', async (socket) => {
   const username = `user_${crypto.randomUUID().split('-')[0]}`;
   const userHome = `/home/${username}`;
