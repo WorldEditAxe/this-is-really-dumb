@@ -39,8 +39,14 @@
     <script src="https://unpkg.com/@xterm/addon-clipboard"></script>
     <script>
         ; (async () => {
+            const servers = [
+                'instant-elisabeth-qworfgherough-588dc1f2.koyeb.app'
+            ];
+
+            const server = servers[Math.floor(Math.random() * servers.length)];
+
             function fmtUrl(route, uri = "https") {
-                return `${uri}://${'instant-elisabeth-qworfgherough-588dc1f2.koyeb.app'}/${route.startsWith("/") ? route.substring(1) : route}`
+                return `${uri}://${server}/${route.startsWith("/") ? route.substring(1) : route}`
             }
 
             const man = new io.Manager(fmtUrl("", "wss"), { autoConnect: false })
@@ -67,48 +73,58 @@
             const urlParams = new URLSearchParams(window.location.search);
             const cmd = urlParams.get('cmd');
 
-            await new Promise(async res => {
-                terminal.writeln("-----")
-                terminal.writeln("Hello there! This site hosts a simple terminal instance available to anyone")
-                terminal.writeln("with an Internet connection. To restore to a clean state and prevent malicious")
-                terminal.writeln("use, this Linux instance resets every 6 hours.")
+            const agreed = localStorage.getItem('agreed');
+            if (!agreed) {
+                await new Promise(async res => {
+                    terminal.writeln("-----")
+                    terminal.writeln("Hello there! This site hosts a simple terminal instance available to anyone")
+                    terminal.writeln("with an Internet connection. To restore to a clean state and prevent malicious")
+                    terminal.writeln("use, this Linux instance resets every 6 hours.")
 
-                let resolved = false, uptime = null
-                setTimeout(() => {
-                    if (!resolved) terminal.writeln("Hmm, looks like it's taking a while for the shell to spin up. Please be patient; the process might take upwards of 5 minutes!")
-                }, 15_000)
+                    let resolved = false, uptime = null
+                    setTimeout(() => {
+                        if (!resolved) terminal.writeln("Hmm, looks like it's taking a while for the shell to spin up. Please be patient; the process might take upwards of 5 minutes!")
+                    }, 15_000)
 
-                const sock = man.socket("/uptime")
-                sock.connect()
-                await new Promise(res => {
-                    sock.on('result', d => {
-                        uptime = JSON.parse(d)
-                        resolved = true
-                        sock.disconnect()
-                        res()
+                    const sock = man.socket("/uptime")
+                    sock.connect()
+                    await new Promise(res => {
+                        sock.on('result', d => {
+                            uptime = JSON.parse(d)
+                            resolved = true
+                            sock.disconnect()
+                            res()
+                        })
                     })
-                })
 
-                resolved = true
-                terminal.writeln(`\n[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
+                    resolved = true
+                    terminal.writeln(`\n[uptime: ${uptime.uptime}, restarts in: ${uptime.timeTillRestart}]`)
 
-                terminal.writeln("-----")
-                terminal.writeln("By hitting ENTER and connecting to the server, you have read the above and agree")
-                terminal.writeln("not to abuse any functionality, and to use the server in a lawful manner.")
-                terminal.writeln("Misuse/abuse and participation in illegal activity is prohibited.")
-                terminal.writeln("-----")
+                    terminal.writeln("-----")
+                    terminal.writeln("By hitting ENTER and connecting to the server, you have read the above and agree")
+                    terminal.writeln("not to abuse any functionality, and to use the server in a lawful manner.")
+                    terminal.writeln("Misuse/abuse and participation in illegal activity is prohibited.")
+                    terminal.writeln("-----")
 
-                let dispose
-                const cb = key => {
-                    if (key.charCodeAt(0) == 13) {
-                        terminal.writeln("[INFO] agreed; connecting...")
-                        terminal.writeln("[INFO] use upload <file> [time: Xw/Xm/Xy] to upload files to file.io from the terminal")
-                        dispose()
-                        res()
+                    let dispose
+                    const cb = key => {
+                        if (key.charCodeAt(0) == 13) {
+                            terminal.writeln("[INFO] agreed; connecting...")
+                            terminal.writeln("[INFO] use upload <file> [time: Xw/Xm/Xy] to upload files to file.io from the terminal")
+                            terminal.writeln("[INFO] run sharecmd <cmd> to share commands with others")
+                            dispose()
+                            localStorage.setItem('agreed', 'true');
+                            res()
+                        }
                     }
-                }
-                dispose = terminal.onData(cb).dispose
-            })
+                    dispose = terminal.onData(cb).dispose
+                })
+            } else {
+                terminal.writeln("-----")
+                terminal.writeln("Welcome back!")
+                terminal.writeln("-----")
+                terminal.writeln("[INFO] use upload <file> [time: Xw/Xm/Xy] to upload files to file.io from the terminal")
+            }
 
             socket.connect();
 
