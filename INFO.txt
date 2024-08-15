@@ -1,0 +1,23 @@
+Hi there, welcome to your Open Terminal instance! The instance you're connected to runs
+a minimal installation of Ubuntu 24.10 LTS. Each user is given basic Internet access to
+facilitate some use cases requiring Internet access, but abuse is certainly not allowed.
+(remember, other people use this site too!)
+
+In addition to an Ubuntu install, we've installed some common CLI tools for your convenience,
+including but not limited to:
+- BusyBox
+- build-essential (+ a couple of build tools, such as cmake)
+- Node.js
+- OpenSSL
+- Nano (and Vim)
+- ...and more!
+
+NOTE: Turn off Dark Reader (and similar extensions) for this site, or the terminal window will
+not automatically expand to fill the whole screen. Thank you!
+
+==========================================
+SWITCHING BETWEEN TOOL VERSIONS
+==========================================
+* Node.js: Run `nvm` in the terminal to change Node.js versions.
+* Java: Run `jenv` in the terminal to change Java versions.
+* Python 3: Run `pyenv` in  the terminal to change Python versions.
