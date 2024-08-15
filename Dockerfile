@@ -16,12 +16,17 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 
 RUN apt-get install -y \
-build-essential curl wget sudo vim tmux unzip rsync \
-net-tools iputils-ping openssh-server ufw git \
-python3 python3-pip default-jdk cmake gdb \
-locate man-db bash-completion apt-transport-https \
-ca-certificates software-properties-common \
-lsblk df du fdisk gzip
+    build-essential curl wget vim tmux unzip rsync \
+    net-tools iputils-ping nano ufw git \
+    python3 python3-pip default-jdk cmake gdb \
+    locate man-db bash-completion apt-transport-https \
+    ca-certificates software-properties-common \
+    lsblk df du fdisk gzip \
+    traceroute dnsutils tcpdump nmap \
+    htop iotop sysstat dstat lsof psmisc \
+    parted e2fsprogs btrfs-progs xfsprogs \
+    jq sed awk grep diffutils \
+    bzip2 xz-utils
 
 # Run the Node.js setup script with sudo
 RUN bash nodesource_setup.sh
