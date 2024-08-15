@@ -4,7 +4,7 @@ const socketIo = require('socket.io');
 const pty = require('node-pty');
 const cors = require('cors');
 const { exec } = require('child_process');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto')
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -47,7 +47,7 @@ io.of('/uptime').on('connection', socket => {
 });
 
 io.of('/term').on('connection', async (socket) => {
-  const username = `user_${uuidv4().split('-')[0]}`;
+  const username = `user_${crypto.randomUUID().split('-')[0]}`;
   const userHome = `/home/${username}`;
   
   try {
