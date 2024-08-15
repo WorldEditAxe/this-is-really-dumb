@@ -104,8 +104,8 @@ io.of('/term').on('connection', async (socket) => {
 
       // Fix terminal resizing by using the correct event name
       socket.on('resize', (size) => {
+        console.log("Resizing!")
         term.resize(size.cols, size.rows);
-        term.emit('resize', size);
       });
 
       return term;
