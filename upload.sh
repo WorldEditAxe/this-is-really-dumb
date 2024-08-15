@@ -87,5 +87,5 @@ eval "$(pyenv init -)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
-echo 'eval "$(jenv init -)"' >> ~/.bash_profile
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
