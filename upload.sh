@@ -49,7 +49,7 @@ sharecmd() {
                 encoded_cmd+=$(printf '%%%02X' "'${1:$i:1}")
             fi
         done
-        echo "Add this to the end of the website's URL, and share it with your friends: ?cmd=$encoded_cmd"
+        echo "Add this to the end of the website's URL: ?cmd=$encoded_cmd"
     else
         echo "Usage: sharecmd <command>"
     fi
