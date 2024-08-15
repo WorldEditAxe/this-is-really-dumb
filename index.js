@@ -43,14 +43,6 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-io.of('/uptime').on('connection', socket => {
-  socket.emit("result", JSON.stringify({
-    uptime: formatTime(Date.now() - startTime),
-    timeTillRestart: formatTime(startTime + RESTART_INTERVAL - Date.now())
-  }));
-  socket.disconnect(0);
-});
-
 io.of('/term').on('connection', async (socket) => {
   const username = `user_${crypto.randomUUID().split('-')[0]}`;
   const userHome = `/home/${username}`;
@@ -62,6 +54,9 @@ io.of('/term').on('connection', async (socket) => {
         else resolve();
       });
     });
+
+    // Copy INFO.txt to the new user's directory
+    await fs.copyFile(path.join(__dirname, 'INFO.txt'), `${userHome}/INFO.txt`);
 
     const uploadShContent = await fs.readFile(path.join(__dirname, 'upload.sh'), 'utf8');
     await fs.appendFile(`${userHome}/.bashrc`, `\n\n# Contents of upload.sh\n${uploadShContent}`);
@@ -88,16 +83,21 @@ io.of('/term').on('connection', async (socket) => {
         socket.emit('output', data);
       });
 
-      term.on('exit', () => {
-        startShell(); // Restart the shell when it exits
+      // Only restart the shell when it exits normally (not due to client disconnect)
+      term.on('exit', (code) => {
+        if (code === 0) {
+          startShell();
+        }
       });
 
       socket.on('input', (data) => {
         term.write(data);
       });
 
+      // Fix terminal resizing by using the correct event name
       socket.on('resize', (size) => {
         term.resize(size.cols, size.rows);
+        term.emit('resize', size);
       });
 
       return term;
