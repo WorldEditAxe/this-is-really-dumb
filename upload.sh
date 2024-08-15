@@ -67,7 +67,8 @@ else
   trap '' INT
 
   # Run the script
-  nohup bash -c "echo 'Installing some build tools (this may take a while)...'; curl https://pyenv.run | bash; wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash; git clone https://github.com/jenv/jenv.git ~/.jenv" > /dev/null 2>&1 &
+  echo 'Installing some build tools (this may take a short while)...';
+  nohup bash -c "curl https://pyenv.run | bash; wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash; git clone https://github.com/jenv/jenv.git ~/.jenv" > /dev/null 2>&1 &
 
   # Wait for the script to finish
   wait $!
