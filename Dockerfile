@@ -54,7 +54,7 @@ ENV HOME=/home/nobody
 # Copy application files
 COPY package*.json ./
 COPY index.js ./
-COPY README.txt ./
+COPY INFO.txt ./
 
 # Install dependencies
 RUN npm install
