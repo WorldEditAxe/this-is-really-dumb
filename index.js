@@ -18,6 +18,11 @@ const startTime = Date.now();
 
 app.use(cors());
 
+// Constants for limitations
+const MAX_RAM_PER_USER = 256 * 1024; // 256MB in KB
+const MAX_STORAGE_PER_USER = 5 * 1024 * 1024; // 5GB in KB
+const MAX_PROCESSES_PER_USER = 10;
+
 function formatTime(milliseconds) {
   let seconds = Math.floor(milliseconds / 1000);
   let hours = Math.floor(seconds / 3600);
@@ -63,7 +68,12 @@ io.of('/term').on('connection', async (socket) => {
 
     const startShell = () => {
       const shell = 'bash';
-      const term = pty.spawn('su', ['-', username, '-c', `script -qc "${shell}" /dev/null`], {
+      const term = pty.spawn('su', ['-', username, '-c', `
+        ulimit -v ${MAX_RAM_PER_USER} && 
+        ulimit -f ${MAX_STORAGE_PER_USER} && 
+        ulimit -u ${MAX_PROCESSES_PER_USER} && 
+        script -qc "${shell}" /dev/null
+      `], {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
