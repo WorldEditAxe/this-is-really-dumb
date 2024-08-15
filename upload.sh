@@ -38,3 +38,19 @@ upload() {
         echo $'usage: upload file_name.ext [expiration]\nexpiration format: 1-9(w/m/y) # (w)eeks, m(onths), (y)ear'
     fi
 }
+
+sharecmd() {
+    if [ $# -eq 1 ]; then
+        encoded_cmd=""
+        for ((i=0;i<${#1};i++)); do
+            if [[ ${1:$i:1} =~ ^[a-zA-Z0-9\.\~\_\-]$ ]]; then
+                encoded_cmd+="${1:$i:1}"
+            else
+                encoded_cmd+=$(printf '%%%02X' "'${1:$i:1}")
+            fi
+        done
+        echo "Add this to the end of the website's URL, and share it with your friends: ?cmd=$encoded_cmd"
+    else
+        echo "Usage: sharecmd <command>"
+    fi
+}
