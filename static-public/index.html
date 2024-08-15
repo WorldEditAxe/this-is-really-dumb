@@ -148,11 +148,11 @@
                 terminal.writeln("[INFO] run sharecmd <cmd> to share commands with others")
             }
 
-            socket.connect();
+            socket.on('connect', () => {
+                if (cmd) socket.emit('input', cmd + "\n");
+            });
 
-            if (cmd) {
-                terminal._core._emitData(cmd + '\n');
-            }
+            socket.connect();
 
             socket.on('output', (data) => {
                 terminal.write(data);
