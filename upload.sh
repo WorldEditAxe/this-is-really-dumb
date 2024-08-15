@@ -58,36 +58,47 @@ sharecmd() {
     fi
 }
 
-# Check if the script has already been run
+# Check if the build tools have already been installed
 if [ -f ~/.build_tools_installed ]; then
   # Build tools already installed, do nothing
   :
 else
-  # Set the script to run in the background and prevent Ctrl+C from interrupting
-  trap '' INT
+  # Check if the user wants to install build tools
+  if [ -f ~/.build_tools_choice ]; then
+    read choice < ~/.build_tools_choice
+  else
+    echo "Do you want to install build tools? (yes/no)"
+    read choice
+    echo "$choice" > ~/.build_tools_choice
+  fi
 
-  # Run the script
-  echo 'Installing some build tools (this may take a short while)...';
-  nohup bash -c "curl https://pyenv.run | bash; wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash; git clone https://github.com/jenv/jenv.git ~/.jenv" > /dev/null 2>&1 &
+  if [ "$choice" = "yes" ]; then
+    # Install build tools
+    echo 'Installing some build tools (this may take a short while)...'
+    curl https://pyenv.run | bash
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+    git clone https://github.com/jenv/jenv.git ~/.jenv
 
-  # Wait for the script to finish
-  wait $!
+    echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
 
-  echo "Hello and welcome! To get started, please read INFO.txt (less INFO.txt OR cat INFO.txt) for more information :D"
-
-  # Create a file to indicate that the script has been run
-  touch ~/.build_tools_installed
+    # Create a file to indicate that the script has been run
+    touch ~/.build_tools_installed
+  else
+    echo "Build tools installation skipped."
+  fi
 fi
 
-# To be ran upon startup
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# Initialize environment variables only if build tools are installed
+if [ -f ~/.build_tools_installed ]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)" > /dev/null 2>&1 &
-jenv enable-plugin export > /dev/null 2>&1 &
-eval "$(jenv init -)" > /dev/null 2>&1 &
+  export PATH="$HOME/.jenv/bin:$PATH"
+  eval "$(jenv init -)"
+  jenv enable-plugin export
+  eval "$(jenv init -)"
+fi
