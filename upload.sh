@@ -81,17 +81,9 @@ installtools() {
   # Create a file to indicate that the script has been run
   touch ~/.build_tools_installed
 
-  export PYENV_ROOT="$HOME/.pyenv"
-  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
   export PATH="$HOME/.jenv/bin:$PATH"
   eval "$(jenv init -)"
   jenv enable-plugin export
-  eval "$(jenv init -)"
 
   echo "Adding Java installations to jenv, please wait... (this may take a short while)"
   # Automatically discover and add Java installations to jenv
@@ -132,7 +124,5 @@ if [ -f ~/.build_tools_installed ]; then
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
   export PATH="$HOME/.jenv/bin:$PATH"
-  eval "$(jenv init -)"
-  jenv enable-plugin export
   eval "$(jenv init -)"
 fi
