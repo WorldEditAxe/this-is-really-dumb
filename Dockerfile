@@ -24,7 +24,7 @@ RUN apt-get update && \
     ca-certificates software-properties-common util-linux gzip \
     traceroute dnsutils tcpdump nmap htop \
     lsof psmisc \
-    parted e2fsprogs btrfs-progs xfsprogs \
+    parted e2fsprogs btrfs-progs xfsprogs openssh-client \
     sed gawk grep diffutils bzip2 \
     xz-utils busybox netcat-traditional less \
     pcp- pcp-conf- libpfm4- libpcp3t64- libpcp-archive1t64- \
